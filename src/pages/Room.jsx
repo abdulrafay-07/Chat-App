@@ -1,14 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import appwriteService from '../appwrite/config';
 
 const Room = () => {
     const [messages, setMessages] = useState([]);
     const [messageBody, setMessageBody] = useState('');
+    const messagesEndRef = useRef(null);
 
     useEffect(() => {
+        fetchMessages();
+    }, [])
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]);
+
+    const fetchMessages = () => {
         appwriteService.getMessages()
             .then(response => setMessages(response.documents));
-    }, [])
+    }
 
     const handleSubmit = async (e, data) => {
         e.preventDefault();
@@ -17,16 +26,37 @@ const Room = () => {
             body: messageBody
         }
 
-        const message = await appwriteService.createMessage({...data, payload});
+        await appwriteService.createMessage({...data, payload});
 
-        
+        fetchMessages();
 
         setMessageBody('');
     }
 
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
     return (
         <main className='container'>
             <div className='room-container'>
+                <div className='messages-container'>    
+                    <div>
+                        {
+                            messages.map((message) => (
+                                <div key={message.$id} className='message-wrapper'>
+                                    <div className='message-header'>
+                                        <small className='message-timestamp'>{message.$createdAt}</small>
+                                    </div>
+                                    <div className='message-body'>
+                                        <span>{message.body}</span>
+                                    </div>
+                                </div>
+                            ))
+                        }
+                    </div>
+                    <div ref={messagesEndRef} />
+                </div>
                 <form onSubmit={handleSubmit} id='message-form'>
                     <div>
                         <textarea
@@ -42,20 +72,6 @@ const Room = () => {
                         <input className='btn btn-secondary' type='submit' value="Send" />
                     </div>
                 </form>
-                <div>
-                    {
-                        messages.map((message) => (
-                            <div key={message.$id} className='message-wrapper'>
-                                <div className='message-header'>
-                                    <small className='message-timestamp'>{message.$createdAt}</small>
-                                </div>
-                                <div className='message-body'>
-                                    <span>{message.body}</span>
-                                </div>
-                            </div>
-                        ))
-                    }
-                </div>
             </div>
         </main>
     )

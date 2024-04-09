@@ -1,5 +1,5 @@
 import conf from '../conf/conf';
-import { Client, Databases, ID } from 'appwrite';
+import { Client, Databases, ID, Query } from 'appwrite';
 
 export class DatabaseService {
     client = new Client();
@@ -16,7 +16,10 @@ export class DatabaseService {
         try {
             return await this.databases.listDocuments(
                 conf.appwriteDatabaseID, 
-                conf.appwriteCollectionID
+                conf.appwriteCollectionID,
+                [
+                    Query.orderAsc('$createdAt')
+                ]
             );
         } catch (error) {
             console.log("Appwrite service :: getMessages :: error", error);

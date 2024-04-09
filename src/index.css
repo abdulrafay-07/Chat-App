@@ -41,6 +41,22 @@ a {
     border: 1px solid var(--borderColor1);
 }
 
+.messages-container {
+    max-height: 500px;
+    overflow-y: auto;
+    padding-bottom: 20px;
+    margin-bottom: 10px;
+}
+
+.messages-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.messages-container::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 4px;
+}
+
 .message-wrapper {
     display: flex;
     flex-wrap: wrap;
@@ -75,6 +91,10 @@ a {
     display: flex;
     flex-direction: column;
     gap: 0.5em;
+}
+
+#message-form textarea {
+    resize: none;
 }
 
 /* Form Input */
