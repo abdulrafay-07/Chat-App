@@ -130,3 +130,10 @@ input[type="text"], input[type="password"], input[type="email"], textarea{
 .btn-secondary {
     background-color: #8db3dd;
 }
+
+.delete-btn {
+    color: #8db3dd;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 16px;
+}

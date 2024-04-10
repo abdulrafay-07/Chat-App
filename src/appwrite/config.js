@@ -12,6 +12,15 @@ export class DatabaseService {
         this.databases = new Databases(this.client);
     }
 
+    subscribe = async () => {
+        try {
+            return this.client;
+        } catch (error) {
+            console.log("Appwrite service :: subscribe :: error", error);
+            return false;
+        }
+    }
+
     getMessages = async () => {
         try {
             return await this.databases.listDocuments(
@@ -37,6 +46,18 @@ export class DatabaseService {
             )
         } catch (error) {
             console.log("Appwrite service :: createMessage :: error", error);
+        }
+    }
+
+    deleteMessage = async (msgId) => {
+        try {
+            return await this.databases.deleteDocument(
+                conf.appwriteDatabaseID,
+                conf.appwriteCollectionID,
+                msgId
+            )
+        } catch (error) {
+            console.log("Appwrite service :: deleteMessage :: error", error);
         }
     }
 }

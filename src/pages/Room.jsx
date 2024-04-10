@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import appwriteService from '../appwrite/config';
+import { FaRegTrashAlt } from 'react-icons/fa';
+import conf from '../conf/conf';
 
 const Room = () => {
     const [messages, setMessages] = useState([]);
@@ -8,11 +10,33 @@ const Room = () => {
 
     useEffect(() => {
         fetchMessages();
+
+        const unsubscribe = () => {
+            appwriteService.subscribe().then(client => {
+                client.subscribe(`databases.${conf.appwriteDatabaseID}.collections.${conf.appwriteCollectionID}.documents`, response => {
+                    if (response.events.includes("databases.*.collections.*.documents.*.create")) {
+                        setMessages(prevMessages => [...prevMessages, response.payload]);
+                    }
+    
+                    if (response.events.includes("databases.*.collections.*.documents.*.delete")) {
+                        setMessages(prevMessages => prevMessages.filter(message => message.$id !== response.payload.$id));
+                    }
+                });
+            });   
+        }
+
+        return () => {
+            unsubscribe();
+        }
     }, [])
 
     useEffect(() => {
         scrollToBottom();
     }, [messages]);
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
 
     const fetchMessages = () => {
         appwriteService.getMessages()
@@ -26,16 +50,17 @@ const Room = () => {
             body: messageBody
         }
 
-        await appwriteService.createMessage({...data, payload});
+        const response = await appwriteService.createMessage({...data, payload});
 
-        fetchMessages();
+        // setMessages(prevMessages => [...prevMessages, response]);
 
         setMessageBody('');
     }
 
-    const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    };
+    const deleteMessage = async (msgId) => {
+        await appwriteService.deleteMessage(msgId);
+        // setMessages(() => messages.filter(message => message.$id !== msgId));
+    }
 
     return (
         <main className='container'>
@@ -46,7 +71,13 @@ const Room = () => {
                             messages.map((message) => (
                                 <div key={message.$id} className='message-wrapper'>
                                     <div className='message-header'>
-                                        <small className='message-timestamp'>{message.$createdAt}</small>
+                                        <small className='message-timestamp'>
+                                            {new Date(message.$createdAt).toLocaleString()}
+                                        </small>
+                                        <FaRegTrashAlt 
+                                            onClick={() => deleteMessage(message.$id)} 
+                                            className='delete-btn'
+                                        />
                                     </div>
                                     <div className='message-body'>
                                         <span>{message.body}</span>
