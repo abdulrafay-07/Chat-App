@@ -137,3 +137,34 @@ input[type="text"], input[type="password"], input[type="email"], textarea{
     transition: 0.3s;
     width: 16px;
 }
+
+.btn-lg{
+    padding: 1em 2em;
+}
+
+.btn-main{
+    background-color: rgb(85, 13, 157);
+    color: #fff;
+}
+
+/* Login & Register */
+
+.auth-container {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-wrapper {
+    width: 600px;
+    height: 600px;
+    padding: 2em;
+}
+
+.field-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    padding: 0.5em 0;
+}

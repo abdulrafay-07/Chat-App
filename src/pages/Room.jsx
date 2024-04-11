@@ -12,7 +12,7 @@ const Room = () => {
         fetchMessages();
 
         const unsubscribe = () => {
-            appwriteService.subscribe().then(client => {
+        appwriteService.subscribe().then(client => {
                 client.subscribe(`databases.${conf.appwriteDatabaseID}.collections.${conf.appwriteCollectionID}.documents`, response => {
                     if (response.events.includes("databases.*.collections.*.documents.*.create")) {
                         setMessages(prevMessages => [...prevMessages, response.payload]);
@@ -22,7 +22,7 @@ const Room = () => {
                         setMessages(prevMessages => prevMessages.filter(message => message.$id !== response.payload.$id));
                     }
                 });
-            });   
+            });       
         }
 
         return () => {
