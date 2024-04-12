@@ -24,6 +24,18 @@ export const AuthProvider = ({children}) => {
         setLoading(false);
     }
 
+    const handleUserSignup = async (e, credentials) => {
+        e.preventDefault();
+
+        const createUser = await appwriteService.createAccount(credentials.email, credentials.password, credentials.name);
+
+        if (createUser) {
+            const userData = await appwriteService.getCurrentUser();
+            setUser(userData);
+            navigate('/');
+        }
+    }
+
     const handleUserLogin = async (e, credentials) => {
         e.preventDefault();
         
@@ -44,6 +56,7 @@ export const AuthProvider = ({children}) => {
     const contextData = {
         user,
         handleUserLogin,
+        handleUserSignup,
         handleUserLogout,
     }
 

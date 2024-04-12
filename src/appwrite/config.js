@@ -14,6 +14,19 @@ export class DatabaseService {
         this.databases = new Databases(this.client);
     }
 
+    createAccount = async (email, password, name) => {
+        try {
+            const userAccount = await this.account.create(ID.unique(), email, password, name);
+            if (userAccount) {
+                return this.loginAccount(email, password);
+            } else {
+                return userAccount;
+            }
+        } catch (error) {
+            console.log("Appwrite service :: createAccount :: error", error);
+        }
+    }
+
     loginAccount = async (email, password) => {
         try {
             return await this.account.createEmailSession(email, password);

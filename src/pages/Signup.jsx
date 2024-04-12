@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { useAuth } from '../utils/AuthContext';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../utils/AuthContext';
 
-const Login = () => {
+const Signup = () => {
     const navigate = useNavigate();
-    const {user, handleUserLogin} = useAuth();
+    const {user, handleUserSignup} = useAuth();
 
     const [credentials, setCredentials] = useState({
         email: '',
-        password: ''
+        password: '',
+        name: ''
     })
 
     useEffect(() => {
@@ -27,10 +28,22 @@ const Login = () => {
     return (
         <div className='auth-container'>
             <div className='form-wrapper'>
-                <form onSubmit={(e) => {handleUserLogin(e, credentials)}}>
+                <form onSubmit={(e) => {handleUserSignup(e, credentials)}}>
                     <h2 className='field-heading'>
-                        Sign in to your account
+                        Sign up to create account
                     </h2>
+
+                    <div className='field-wrapper'>
+                        <label htmlFor='name'>Name:</label>
+                        <input
+                            type='text'
+                            placeholder='Enter your name'
+                            name='name'
+                            required
+                            value={credentials.name}
+                            onChange={handleInputChange}
+                        />
+                    </div>
 
                     <div className='field-wrapper'>
                         <label htmlFor='email'>Email:</label>
@@ -57,12 +70,12 @@ const Login = () => {
                     </div>
 
                     <div className='field-signup-text'>
-                        <p>Don&apos;t have any account?&nbsp;</p>
+                        <p>Already have an account?&nbsp;</p>
                         <Link
                             className='auth-link'
-                            to="/signup"
+                            to="/login"
                         >
-                            Sign Up
+                            Sign In
                         </Link>
                     </div>
 
@@ -70,7 +83,7 @@ const Login = () => {
                         <input
                             className='btn btn-lg btn-main'
                             type='submit'
-                            value="Login"
+                            value="Sign Up"
                         />
                     </div>
                 </form>
@@ -79,4 +92,4 @@ const Login = () => {
     )
 }
 
-export default Login;
+export default Signup;
