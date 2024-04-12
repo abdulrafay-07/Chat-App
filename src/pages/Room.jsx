@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import appwriteService from '../appwrite/config';
 import { FaRegTrashAlt } from 'react-icons/fa';
 import conf from '../conf/conf';
+import { Header } from '../components/index';
 
 const Room = () => {
     const [messages, setMessages] = useState([]);
@@ -64,6 +65,7 @@ const Room = () => {
 
     return (
         <main className='container'>
+            <Header />
             <div className='room-container'>
                 <div className='messages-container'>    
                     <div>

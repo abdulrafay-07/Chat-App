@@ -1,15 +1,43 @@
 import conf from '../conf/conf';
-import { Client, Databases, ID, Query } from 'appwrite';
+import { Account, Client, Databases, ID, Query } from 'appwrite';
 
 export class DatabaseService {
     client = new Client();
+    account;
     databases;
 
     constructor() {
         this.client
             .setEndpoint(conf.appwriteURL)
             .setProject(conf.appwriteProjectID);
+        this.account = new Account(this.client);
         this.databases = new Databases(this.client);
+    }
+
+    loginAccount = async (email, password) => {
+        try {
+            return await this.account.createEmailSession(email, password);
+        } catch (error) {
+            console.log("Appwrite service :: loginAccount :: error", error);
+        }
+    }
+
+    logoutAccount = async () => {
+        try {
+            return await this.account.deleteSessions();
+        } catch (error) {
+            console.log("Appwrite service :: logoutAccount :: error", error);
+        }
+    }
+
+    getCurrentUser = async () => {
+        try {
+            return await this.account.get();
+        } catch (error) {
+            console.log("Appwrite service :: getCurrentUser :: error", error);
+        }
+
+        return null;
     }
 
     subscribe = async () => {

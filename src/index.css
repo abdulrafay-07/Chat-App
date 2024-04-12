@@ -32,6 +32,13 @@ a {
     margin: 20px auto;
 }
 
+.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
 /* Room */
 
 .room-container {
@@ -167,4 +174,26 @@ input[type="text"], input[type="password"], input[type="email"], textarea{
     flex-direction: column;
     gap: 1em;
     padding: 0.5em 0;
+}
+
+/* Header */
+
+#header-wrapper {
+    background-color: var(--mainBgColor);
+    padding: 1em;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 10px 10px 0 0;
+    border: 1px solid var(--borderColor1);
+    border-bottom: none;
+}
+
+.header--link{
+    color: #c7d8eb;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.header--link:hover{
+color: #8db3dd;
 }
