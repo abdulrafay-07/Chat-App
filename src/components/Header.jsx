@@ -10,8 +10,10 @@ const Header = () => {
         <div id='header-wrapper'>
             {user ? (
                 <>
-                    <h2>Welcome {user.name}</h2>
-                    <IoIosLogOut onClick={handleUserLogout} className='header-link' />
+                    <h3>Welcome {user.name}</h3>
+                    <div className='header-link'>
+                        <IoIosLogOut onClick={handleUserLogout} />
+                    </div>
                 </>
             ) : (
                 <Link to='/login'>Login</Link>

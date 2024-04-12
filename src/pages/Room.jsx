@@ -3,8 +3,11 @@ import appwriteService from '../appwrite/config';
 import { FaRegTrashAlt } from 'react-icons/fa';
 import conf from '../conf/conf';
 import { Header } from '../components/index';
+import { useAuth } from '../utils/AuthContext';
+import { Role, Permission } from 'appwrite';
 
 const Room = () => {
+    const {user} = useAuth();
     const [messages, setMessages] = useState([]);
     const [messageBody, setMessageBody] = useState('');
     const messagesEndRef = useRef(null);
@@ -48,10 +51,16 @@ const Room = () => {
         e.preventDefault();
 
         let payload = {
+            userId: user.$id,
+            username: user.name,
             body: messageBody
         }
 
-        const response = await appwriteService.createMessage({...data, payload});
+        let permissions = [
+            Permission.write(Role.user(user.$id))
+        ]
+
+        const response = await appwriteService.createMessage({payload, permissions});
 
         // setMessages(prevMessages => [...prevMessages, response]);
 
@@ -73,15 +82,31 @@ const Room = () => {
                             messages.map((message) => (
                                 <div key={message.$id} className='message-wrapper'>
                                     <div className='message-header'>
-                                        <small className='message-timestamp'>
-                                            {new Date(message.$createdAt).toLocaleString()}
-                                        </small>
-                                        <FaRegTrashAlt 
-                                            onClick={() => deleteMessage(message.$id)} 
-                                            className='delete-btn'
-                                        />
+                                        <p>
+                                            {
+                                                message?.username ? (
+                                                    <span>{message.username}</span>
+                                                ) : <span>Anonymous User</span>
+                                            }
+                                            <small className='message-timestamp'>
+                                                {new Date(message.$createdAt).toLocaleString()}
+                                            </small>
+                                        </p>
+                                        {
+                                            message.$permissions.includes(`delete(\"user:${user.$id}\")`) && (
+                                                <FaRegTrashAlt 
+                                                    onClick={() => deleteMessage(message.$id)} 
+                                                    className='delete-btn'
+                                                />
+                                            )
+                                        }
                                     </div>
-                                    <div className='message-body'>
+                                    <div 
+                                        className={`${
+                                            message.$permissions.includes(`delete(\"user:${user.$id}\")`) ? 
+                                            'message-body message-owner-body' : 'message-body message-viewer-body'
+                                        }`}
+                                    >
                                         <span>{message.body}</span>
                                     </div>
                                 </div>

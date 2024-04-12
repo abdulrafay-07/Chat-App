@@ -77,13 +77,14 @@ export class DatabaseService {
         }
     }
 
-    createMessage = async ({payload}) => {
+    createMessage = async ({payload, permissions}) => {
         try {
             return await this.databases.createDocument(
                 conf.appwriteDatabaseID,
                 conf.appwriteCollectionID,
                 ID.unique(),
-                payload
+                payload,
+                permissions
             )
         } catch (error) {
             console.log("Appwrite service :: createMessage :: error", error);

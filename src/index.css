@@ -85,13 +85,21 @@ a {
 
 .message-body {
     padding: 0.5em 0;
-    color: var(--textColorSecondary);
-    background-color: var(--themeColorMain);
     padding: 1em;
     border-radius: 20px;
     width: fit-content;
     max-width: 100%;
     word-wrap: break-word;
+}
+
+.message-viewer-body {
+    color: var(--textColorSecondary);
+    background-color: var(--themeColorMain);
+}
+
+.message-owner-body {
+    border: 1px solid var(--themeColorMain);
+    background-color: transparent;
 }
 
 #message-form {
@@ -145,8 +153,16 @@ input[type="text"], input[type="password"], input[type="email"], textarea{
     width: 16px;
 }
 
+.delete-btn:hover{
+    color:red;
+}
+
 .btn-lg{
     padding: 1em 2em;
+}
+
+.btn:hover{
+    opacity: 0.7;
 }
 
 .btn-main{
@@ -204,12 +220,15 @@ input[type="text"], input[type="password"], input[type="email"], textarea{
     border-bottom: none;
 }
 
-.header--link{
+.header-link{
+    display: flex;
+    align-items: center;
+    font-size: 1.2em;
     color: #c7d8eb;
     cursor: pointer;
     transition: 0.3s;
 }
 
-.header--link:hover{
+.header-link:hover{
 color: #8db3dd;
 }
